@@ -1587,6 +1587,10 @@ BestOverlapGraph::isOverlapBadQuality(BAToverlap& olap) {
        (isLopsided(olap.b_iid) == true)))
     isBad = true;
 
+  if ((isCoverageGap(olap.a_iid) == true) ||         //  But if either read is ignored,
+      (isCoverageGap(olap.b_iid) == true))           //  the overlap is also bad.
+    isIgn = true;
+
   if (minOlapPercent > 0.0) {
     uint32  lenA = RI->readLength(olap.a_iid);     //  But retract goodness if the
     uint32  lenB = RI->readLength(olap.b_iid);     //  length of the overlap relative
