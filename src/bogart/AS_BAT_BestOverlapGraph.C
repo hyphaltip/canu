@@ -256,13 +256,20 @@ BestOverlapGraph::removeReadsWithCoverageGap(const char *prefix, uint32 covGapOl
     if ((IL.numberOfIntervals() == 0))
       continue;
 
-    if ((IL.numberOfIntervals() == 1))
-      continue;
+    if ((IL.numberOfIntervals() == 1)) {
+      if (fLen > 100 && IL.lo(0) <= 100 && IL.hi(0) >= fLen - 100) {
+        continue;
+      }
+    }
 
     //  Otherwise, log and flag it as bad.
 
     if (F) {
       switch (IL.numberOfIntervals()) {
+        case 1:
+          fprintf(F, "read %u -- %u regions %d-%d\n", fi, IL.numberOfIntervals(),
+                  IL.lo(0), IL.hi(0));
+          break;
         case 2:
           fprintf(F, "read %u -- %u regions %d-%d %d-%d\n", fi, IL.numberOfIntervals(),
                   IL.lo(0), IL.hi(0),
